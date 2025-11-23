@@ -42,4 +42,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ toLower(github.repository_owner) }}/${{ github.event.repository.name }}
+          tags: ghcr.io/chumachenkoua/${{ github.event.repository.name }}
