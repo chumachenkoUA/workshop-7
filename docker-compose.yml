@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  pw-server:
+    image: "mcr.microsoft.com/playwright:v1.56.1-jammy"
+    init: true
+    ipc: host
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "hostmachine:host-gateway"
+    working_dir: /home/pwuser
+    user: pwuser
+    command: >
+      /bin/sh -lc "npx -y playwright@1.56.1 run-server
+      --port 3000 --host 0.0.0.0"
+    restart: unless-stopped
+
+  e2e:
+    image: "mcr.microsoft.com/playwright:v1.56.1-jammy"
+    init: true
+    ipc: host
+    extra_hosts:
+      - "hostmachine:host-gateway"
+    working_dir: /work
+    volumes:
+      - ./:/work
+    command: >
+      /bin/bash -lc "
+        corepack enable &&
+        corepack prepare pnpm@latest --activate &&
+        pnpm i --frozen-lockfile &&
+        pnpm exec playwright test
+      "
+    profiles: ["run-once"]
