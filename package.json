@@ -34,7 +34,13 @@
     "preview": "vite preview",
     "commitlint": "commitlint --edit",
     "commitizen": "exec < /dev/tty && git cz --hook || true",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e:server:up": "docker compose up -d pw-server",
+    "e2e:server:logs": "docker compose logs -f pw-server",
+    "e2e:server:down": "docker compose down",
+    "e2e:test:remote": "PW_TEST_CONNECT_WS_ENDPOINT=ws://127.0.0.1:3000 pnpm exec playwright test",
+    "e2e:test:remote:ui": "PW_TEST_CONNECT_WS_ENDPOINT=ws://127.0.0.1:3000 pnpm exec playwright test --ui",
+    "e2e:docker": "docker compose run --rm --profile run-once e2e"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.0",
@@ -45,6 +51,7 @@
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-router": "^1.130.0",
     "@tanstack/react-table": "^8.21.3",
+    "axios": "^1.13.2",
     "dayjs": "^1.11.13",
     "i18next": "^25.3.2",
     "i18next-browser-languagedetector": "^8.2.0",
@@ -65,7 +72,7 @@
     "@headlessui/react": "^2.2.6",
     "@heroicons/react": "^2.2.0",
     "@hookform/devtools": "^4.4.0",
-    "@playwright/test": "^1.54.1",
+    "@playwright/test": "^1.56.1",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/addon-links": "^9.0.18",
