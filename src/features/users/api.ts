@@ -3,9 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiClient from "../../lib/axios";
 import type { ApiSuccess } from "../apiTypes";
 import type { AdminUser, UserUpdatePayload } from "./types";
+import type { AuthRegisterPayload } from "../auth/types";
 
 const baseKey = ["users"] as const;
-const baseUrl = "/v1/users";
+const baseUrl = "/users";
 
 const getAll = async (): Promise<Array<AdminUser>> => {
 	const { data } = await apiClient.get<ApiSuccess<Array<AdminUser>>>(baseUrl);
@@ -24,6 +25,15 @@ const updateItem = async ({ id, ...payload }: { id: string } & UserUpdatePayload
 
 const deleteItem = async (id: string): Promise<void> => {
 	await apiClient.delete<ApiSuccess<null>>(`${baseUrl}/${id}`);
+};
+
+const createDispatcher = async (payload: AuthRegisterPayload): Promise<string> => {
+	const body = {
+		...payload,
+		passwordConfirm: payload.passwordConfirm ?? payload.password,
+	};
+	const { data } = await apiClient.post<ApiSuccess<string>>(`${baseUrl}/dispatchers`, body);
+	return data.message ?? "Dispatcher created.";
 };
 
 export const useUsers = () =>
@@ -61,6 +71,17 @@ export const useDeleteUser = () => {
 		onSuccess: async (_, id) => {
 			await queryClient.invalidateQueries({ queryKey: baseKey });
 			queryClient.removeQueries({ queryKey: [...baseKey, id] });
+		},
+	});
+};
+
+export const useCreateDispatcher = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: createDispatcher,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: baseKey });
 		},
 	});
 };

@@ -5,7 +5,7 @@ import type { ApiSuccess } from "../apiTypes";
 import type { CardTopUp, CardTopUpPayload, CardTopUpUpdatePayload } from "./types";
 
 const baseKey = ["cardTopUps"] as const;
-const baseUrl = "/v1/card-top-ups";
+const baseUrl = "/card-top-ups";
 
 const getAll = async (): Promise<Array<CardTopUp>> => {
 	const { data } = await apiClient.get<ApiSuccess<Array<CardTopUp>>>(baseUrl);
@@ -14,6 +14,11 @@ const getAll = async (): Promise<Array<CardTopUp>> => {
 
 const getById = async (id: string): Promise<CardTopUp> => {
 	const { data } = await apiClient.get<ApiSuccess<CardTopUp>>(`${baseUrl}/${id}`);
+	return data.data;
+};
+
+const getMine = async (): Promise<Array<CardTopUp>> => {
+	const { data } = await apiClient.get<ApiSuccess<Array<CardTopUp>>>(`${baseUrl}/me`);
 	return data.data;
 };
 
@@ -37,6 +42,12 @@ export const useCardTopUps = () =>
 		queryFn: getAll,
 	});
 
+export const useMyCardTopUps = () =>
+	useQuery({
+		queryKey: [...baseKey, "me"],
+		queryFn: getMine,
+	});
+
 export const useCardTopUp = (id: string) =>
 	useQuery({
 		queryKey: [...baseKey, id],
@@ -50,7 +61,10 @@ export const useCreateCardTopUp = () => {
 	return useMutation({
 		mutationFn: createItem,
 		onSuccess: async (created) => {
-			await queryClient.invalidateQueries({ queryKey: baseKey });
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: baseKey }),
+				queryClient.invalidateQueries({ queryKey: [...baseKey, "me"] }),
+			]);
 			if (created?.id) {
 				queryClient.setQueryData([...baseKey, created.id], created);
 			}

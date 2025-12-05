@@ -5,7 +5,7 @@ import type { ApiSuccess } from "../apiTypes";
 import type { TransportCard, TransportCardPayload } from "./types";
 
 const baseKey = ["transportCards"] as const;
-const baseUrl = "/v1/transport-cards";
+const baseUrl = "/transport-cards";
 
 const getAll = async (): Promise<Array<TransportCard>> => {
 	const { data } = await apiClient.get<ApiSuccess<Array<TransportCard>>>(baseUrl);
@@ -14,6 +14,11 @@ const getAll = async (): Promise<Array<TransportCard>> => {
 
 const getById = async (id: string): Promise<TransportCard> => {
 	const { data } = await apiClient.get<ApiSuccess<TransportCard>>(`${baseUrl}/${id}`);
+	return data.data;
+};
+
+const getMine = async (): Promise<TransportCard> => {
+	const { data } = await apiClient.get<ApiSuccess<TransportCard>>(`${baseUrl}/me`);
 	return data.data;
 };
 
@@ -42,6 +47,12 @@ export const useTransportCard = (id: string) =>
 		queryKey: [...baseKey, id],
 		queryFn: () => getById(id),
 		enabled: Boolean(id),
+	});
+
+export const useMyTransportCard = () =>
+	useQuery({
+		queryKey: [...baseKey, "me"],
+		queryFn: getMine,
 	});
 
 export const useCreateTransportCard = () => {

@@ -1,7 +1,6 @@
 export type AdminUser = {
   id: number;
   email: string;
-  username?: string;
   name?: string;
   phone?: string;
   fullName?: string;
@@ -13,7 +12,6 @@ export type AdminUser = {
 };
 
 export type UserUpdatePayload = {
-  username?: string;
   name?: string;
   phone?: string;
   fullName?: string;
