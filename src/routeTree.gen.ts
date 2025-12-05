@@ -9,38 +9,139 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminTransitUsersTransitUserIdRouteImport } from './routes/admin/transit-users/$transitUserId'
+import { Route as AdminDriversDriverIdRouteImport } from './routes/admin/drivers/$driverId'
+import { Route as AdminDispatchersUserIdRouteImport } from './routes/admin/dispatchers/$userId'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTransitUsersTransitUserIdRoute =
+  AdminTransitUsersTransitUserIdRouteImport.update({
+    id: '/transit-users/$transitUserId',
+    path: '/transit-users/$transitUserId',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminDriversDriverIdRoute = AdminDriversDriverIdRouteImport.update({
+  id: '/drivers/$driverId',
+  path: '/drivers/$driverId',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDispatchersUserIdRoute = AdminDispatchersUserIdRouteImport.update({
+  id: '/dispatchers/$userId',
+  path: '/dispatchers/$userId',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admin/dispatchers/$userId': typeof AdminDispatchersUserIdRoute
+  '/admin/drivers/$driverId': typeof AdminDriversDriverIdRoute
+  '/admin/transit-users/$transitUserId': typeof AdminTransitUsersTransitUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admin/dispatchers/$userId': typeof AdminDispatchersUserIdRoute
+  '/admin/drivers/$driverId': typeof AdminDriversDriverIdRoute
+  '/admin/transit-users/$transitUserId': typeof AdminTransitUsersTransitUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
+  '/admin/dispatchers/$userId': typeof AdminDispatchersUserIdRoute
+  '/admin/drivers/$driverId': typeof AdminDriversDriverIdRoute
+  '/admin/transit-users/$transitUserId': typeof AdminTransitUsersTransitUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/login'
+    | '/admin/dispatchers/$userId'
+    | '/admin/drivers/$driverId'
+    | '/admin/transit-users/$transitUserId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/login'
+    | '/admin/dispatchers/$userId'
+    | '/admin/drivers/$driverId'
+    | '/admin/transit-users/$transitUserId'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/login'
+    | '/admin/dispatchers/$userId'
+    | '/admin/drivers/$driverId'
+    | '/admin/transit-users/$transitUserId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +149,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/transit-users/$transitUserId': {
+      id: '/admin/transit-users/$transitUserId'
+      path: '/transit-users/$transitUserId'
+      fullPath: '/admin/transit-users/$transitUserId'
+      preLoaderRoute: typeof AdminTransitUsersTransitUserIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/drivers/$driverId': {
+      id: '/admin/drivers/$driverId'
+      path: '/drivers/$driverId'
+      fullPath: '/admin/drivers/$driverId'
+      preLoaderRoute: typeof AdminDriversDriverIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dispatchers/$userId': {
+      id: '/admin/dispatchers/$userId'
+      path: '/dispatchers/$userId'
+      fullPath: '/admin/dispatchers/$userId'
+      preLoaderRoute: typeof AdminDispatchersUserIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminDispatchersUserIdRoute: typeof AdminDispatchersUserIdRoute
+  AdminDriversDriverIdRoute: typeof AdminDriversDriverIdRoute
+  AdminTransitUsersTransitUserIdRoute: typeof AdminTransitUsersTransitUserIdRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminDispatchersUserIdRoute: AdminDispatchersUserIdRoute,
+  AdminDriversDriverIdRoute: AdminDriversDriverIdRoute,
+  AdminTransitUsersTransitUserIdRoute: AdminTransitUsersTransitUserIdRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AdminRoute: AdminRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
