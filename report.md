@@ -45,10 +45,10 @@
 
 ## Налаштування та запуск
 1. Створіть `.env` на основі `.env.example`, задайте `VITE_API_BASE_URL="http://localhost:4000/v1"` і токен `VITE_API_AUTH_TOKEN` (або залогіньтеся через UI).
-2. Запустіть бекенд (див. `/home/kirito/WebstormProjects/workshop-5`, стартує на `:4000` з префіксом `/v1`).
+2. Запустіть бекенд (`workshop-5`, стартує на `:4000` з префіксом `/v1`).
 3. У фронтенді: `pnpm install`, потім `pnpm dev`.
 
-## Скриншоти (підготуйте для звіту)
+## Скриншоти
 ![Login Page](./docs/Zod.png)
 ![Admin Panel - Transit Users](./docs/entities.png)
 ![Network Tab](./docs/Network.png)
